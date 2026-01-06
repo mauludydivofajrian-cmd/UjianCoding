@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Studi Kasus Penjualan Buku</title>
+</head>
+<body>
+
+<h2>Studi Kasus Penjualan Buku</h2>
+<p>Buka <b>Console</b> (F12) untuk melihat hasil.</p>
+
+<script>
+const HARGA_PER_BUKU = 5000;
+
+let totalPendapatan = 0;
+let pembeliDiskonKecil = 0;
+let pembeliDiskonBesar = 0;
+let daftarPembelian = [];
+
+let jumlahPembeli = parseInt(prompt("Masukkan jumlah pembeli:"));
+
+let dataBuku = [];
+
+for (let i = 0; i < jumlahPembeli; i++) {
+    let jumlahBuku = parseInt(
+        prompt(`Masukkan jumlah buku pembeli ke-${i + 1}:`)
+    );
+    dataBuku.push(jumlahBuku);
+}
+
+function prosesPenjualan(jumlahPembeli, dataBuku) {
+
+    for (let i = 0; i < jumlahPembeli; i++) {
+        let jumlahBuku = dataBuku[i];
+        let hargaAkhir = 0;
+
+        if (jumlahBuku <= 100) {
+            hargaAkhir = jumlahBuku * HARGA_PER_BUKU;
+        } 
+        else if (jumlahBuku <= 200) {
+            let seratusPertama = 100 * HARGA_PER_BUKU * 0.95;
+            let sisanya = (jumlahBuku - 100) * HARGA_PER_BUKU * 0.85;
+            hargaAkhir = seratusPertama + sisanya;
+            pembeliDiskonKecil++;
+        } 
+        else {
+            let seratusPertama = 100 * HARGA_PER_BUKU * 0.93;
+            let seratusKedua = 100 * HARGA_PER_BUKU * 0.83;
+            let sisanya = (jumlahBuku - 200) * HARGA_PER_BUKU * 0.73;
+            hargaAkhir = seratusPertama + seratusKedua + sisanya;
+            pembeliDiskonBesar++;
+        }
+
+        daftarPembelian.push({
+            pembeliKe: i + 1,
+            jumlahEksemplar: jumlahBuku,
+            totalHarga: hargaAkhir
+        });
+
+        totalPendapatan += hargaAkhir;
+    }
+
+    tampilkanStatistik();
+}
+
+
+function tampilkanStatistik() {
+    console.log("=== LAPORAN PENJUALAN BUKU ===");
+
+    let rataRata = totalPendapatan / daftarPembelian.length;
+
+    console.log(`Total Pendapatan     : Rp ${totalPendapatan.toLocaleString('id-ID')}`);
+    console.log(`Rata-rata Pendapatan : Rp ${rataRata.toLocaleString('id-ID')}`);
+    console.log(`Pembeli Diskon Kecil : ${pembeliDiskonKecil} orang`);
+    console.log(`Pembeli Diskon Besar : ${pembeliDiskonBesar} orang`);
+
+    console.log("\n--- Detail Pembelian ---");
+    daftarPembelian.forEach(data => {
+        console.log(
+            `Pembeli ke-${data.pembeliKe} | ` +
+            `Jumlah Buku: ${data.jumlahEksemplar} | ` +
+            `Total: Rp ${data.totalHarga.toLocaleString('id-ID')}`
+        );
+    });
+}
+
+prosesPenjualan(jumlahPembeli, dataBuku);
+</script>
+
+</body>
+</html>
+
